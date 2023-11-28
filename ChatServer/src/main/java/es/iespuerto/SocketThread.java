@@ -10,12 +10,13 @@ public class SocketThread extends Thread {
 
     private DataInputStream recibirDatos = null;
     private DataOutputStream enviarDatos = null;
-    private LinkedList<SocketThread> threads = new LinkedList<SocketThread>();
-    private ArrayList<Integer> ids = new ArrayList<Integer>();
 
-    public SocketThread (DataInputStream dis, DataOutputStream dos) {
+    private User user;
+
+    public SocketThread (DataInputStream dis, DataOutputStream dos, User u) {
         recibirDatos = dis;
         enviarDatos = dos;
+        user = u;
     }
 
     private String readUTF() {
