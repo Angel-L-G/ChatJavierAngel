@@ -11,12 +11,12 @@ public class SocketThread extends Thread {
     private DataInputStream recibirDatos = null;
     private DataOutputStream enviarDatos = null;
 
-    private User user;
+    private User u;
 
-    public SocketThread (DataInputStream dis, DataOutputStream dos, User u) {
+    public SocketThread (DataInputStream dis, DataOutputStream dos) {
         recibirDatos = dis;
         enviarDatos = dos;
-        user = u;
+        u = new User();
     }
 
     private String readUTF() {
@@ -38,6 +38,17 @@ public class SocketThread extends Thread {
         }
     }
 
+    private int readINT() {
+        int num = 0;
+        try {
+            num = recibirDatos.readInt();
+            System.out.println(Colors.ANSI_RED+num+Colors.ANSI_RESET);
+        } catch (IOException ex) {
+            System.err.println("Error al leer datos del cliente");
+        }
+        return num;
+    }
+
     private void chat(){
         writeUTF("Escriba el Mensaje: ");
         String mensaje = readUTF();
@@ -45,8 +56,24 @@ public class SocketThread extends Thread {
         writeUTF(mensaje);
     }
 
+    private void setUser(){
+        writeUTF("Escriba su nombre de User: ");
+        String nick = readUTF();
+        u.setNombre(nick);
+
+        writeUTF("Escriba su nombre de User: ");
+        int chat = readINT();
+        u.setIdChat(chat);
+
+        System.out.println(Colors.ANSI_CYAN+u.getNombre()+" "+u.getIdChat()+Colors.ANSI_RESET);
+    }
+
+    @Override
     public void run() {
         writeUTF("¡Bienvenido a tu Chat!");
+
+        //setUser();
+
         writeUTF("Selecciona una opción:");
         String opcion = "";
         while (!opcion.equals("salir")) {

@@ -14,6 +14,7 @@ public class Server {
     private ArrayList<User> users = new ArrayList<User>();
     private final int PORT = 60000;
     private DataOutputStream enviarDatos = null;
+    private DataInputStream recibirDatos = null;
 
     public Server() throws IOException {
         this.serverSocket = new ServerSocket(PORT);
@@ -34,6 +35,15 @@ public class Server {
         return texto;
     }
 
+    private void writeUTF(String text) {
+        try {
+            enviarDatos.writeUTF(text);
+        } catch (IOException ex) {
+            System.err.println("Error al enviar datos al cliente");
+        }
+    }
+
+
 
     public void waitConnections() throws IOException {
         while (true) {
@@ -42,18 +52,11 @@ public class Server {
 
             System.out.println("Cliente conectado correctamente");
 
-            DataInputStream recibirDatos = new DataInputStream(socket.getInputStream());
+            this.recibirDatos = new DataInputStream(socket.getInputStream());
             this.enviarDatos = new DataOutputStream(socket.getOutputStream());
 
-            SocketThread socketThread = new SocketThread(recibirDatos, enviarDatos, null);
+            SocketThread socketThread = new SocketThread(recibirDatos, enviarDatos);
             threads.add(socketThread);
-
-            String opcion = "";
-            while(opcion.equals("usuario")) {
-                String nick = readUTF();
-                User u = new User();
-                u.setNombre(nick);
-            }
 
             socketThread.start();
         }
