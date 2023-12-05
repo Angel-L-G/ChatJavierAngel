@@ -11,7 +11,6 @@ import java.util.LinkedList;
 public class Server {
     private final ServerSocket serverSocket;
     private LinkedList<SocketThread> threads = new LinkedList<SocketThread>();
-    private ArrayList<User> users = new ArrayList<User>();
     private final int PORT = 60000;
     private DataOutputStream enviarDatos = null;
     private DataInputStream recibirDatos = null;
@@ -43,8 +42,6 @@ public class Server {
         }
     }
 
-
-
     public void waitConnections() throws IOException {
         while (true) {
             System.out.println("Esperando conexiones de clientes");
@@ -55,7 +52,7 @@ public class Server {
             this.recibirDatos = new DataInputStream(socket.getInputStream());
             this.enviarDatos = new DataOutputStream(socket.getOutputStream());
 
-            SocketThread socketThread = new SocketThread(recibirDatos, enviarDatos);
+            SocketThread socketThread = new SocketThread(recibirDatos, enviarDatos, threads);
             threads.add(socketThread);
 
             socketThread.start();
