@@ -6,21 +6,22 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class Server {
     private final ServerSocket serverSocket;
-    private LinkedList<SocketThread> threads = new LinkedList<SocketThread>();
+    private Map<String, ChatRoom> chatRooms;
+    private Map<DataOutputStream, String> clientRooms;
     private final int PORT = 60000;
     private DataOutputStream enviarDatos = null;
     private DataInputStream recibirDatos = null;
 
     public Server() throws IOException {
         this.serverSocket = new ServerSocket(PORT);
-    }
-
-    public LinkedList<SocketThread> getThreads() {
-        return threads;
+        chatRooms = new HashMap<>();
+        clientRooms = new HashMap<>();
     }
 
     private String readUTF() {
@@ -52,10 +53,19 @@ public class Server {
             this.recibirDatos = new DataInputStream(socket.getInputStream());
             this.enviarDatos = new DataOutputStream(socket.getOutputStream());
 
-            SocketThread socketThread = new SocketThread(recibirDatos, enviarDatos, threads);
-            threads.add(socketThread);
+            SocketThread socketThread = new SocketThread(recibirDatos, enviarDatos, this);
 
             socketThread.start();
         }
+    }
+
+    public synchronized ChatRoom getChatRoom(String roomId) {
+        return chatRooms.computeIfAbsent(roomId, ChatRoom::new);
+    }
+
+    public synchronized void joinChatRoom(String roomName, DataOutputStream client) {
+        ChatRoom room = getChatRoom(roomName);
+        room.addClient(client);
+        clientRooms.put(client, roomName);
     }
 }

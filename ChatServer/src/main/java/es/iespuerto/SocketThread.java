@@ -10,45 +10,21 @@ public class SocketThread extends Thread {
 
     private DataInputStream recibirDatos = null;
     private DataOutputStream enviarDatos = null;
-    private LinkedList<SocketThread> threads = new LinkedList<SocketThread>();
-    private ArrayList<SocketThread> paired = new ArrayList<SocketThread>();
+    Server server;
+    private ChatRoom room;
 
     private User u;
 
-    public SocketThread (DataInputStream dis, DataOutputStream dos, LinkedList<SocketThread> threads) {
+    public SocketThread (DataInputStream dis, DataOutputStream dos, Server s) {
         recibirDatos = dis;
         enviarDatos = dos;
         u = new User();
-        this.threads = threads;
+        this.server = s;
     }
 
     public User getUser() {
         return u;
     }
-
-    public void setConnected(ArrayList<SocketThread> st) {
-        paired = st;
-    }
-
-    public void paring() {
-        ArrayList<SocketThread> paring = new ArrayList<SocketThread>();
-        for(SocketThread thread : threads) {
-            System.out.println(thread.getUser().getIdChat());
-            int actual = thread.getUser().getIdChat();
-            if(actual == u.getIdChat()) {
-                System.out.println("Añadido");
-                paring.add(thread);
-            }
-        }
-
-        for(SocketThread thread : paring) {
-            setConnected(paring);
-        }
-
-        paired = paring;
-    }
-
-
 
     private String readUTF() {
         String texto = "";
@@ -87,17 +63,9 @@ public class SocketThread extends Thread {
 
         writeUTF("Id Chat: ");
         String chat = readUTF();
-        u.setIdChat(Integer.parseInt(chat));
+        u.setIdChat(chat);
 
         System.out.println(Colors.ANSI_CYAN+u.getNombre()+" "+u.getIdChat()+Colors.ANSI_RESET);
-
-        paring();
-    }
-
-    public void writeAllConected(String msg){
-        for(SocketThread thread : paired) {
-            thread.writeUTF(msg);
-        }
     }
 
     @Override
@@ -112,17 +80,60 @@ public class SocketThread extends Thread {
         switch (opcion) {
             case "entrar":
                 setUser();
+
+                server.joinChatRoom(u.getIdChat(), enviarDatos);
+                this.room = server.getChatRoom(u.getIdChat());
+
                 writeUTF("Escriba el Mensaje: ");
                 while (!opcion.equals("salir")) {
-                    String mensaje = readUTF();
-                    writeAllConected(mensaje);
-                    mensaje = "";
+                    int aux = 0;
+                    try {
+                        aux= recibirDatos.available();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
 
+                    String mensaje;
+
+                    if(aux > 0){
+                        mensaje = readUTF();
+
+                        room.broadcastMessage(mensaje, enviarDatos);
+                    }
+
+                    mensaje = "";
                     opcion = "";
                 }
                 break;
             default:
                 writeUTF("Opción incorrecta.");
             }
+
+            /*
+            Thread readThread = new Thread(() -> {
+                    while (true) {
+                        try {
+                            System.out.println("1");
+                            String mensaje = recibirDatos.readUTF();
+                            room.broadcastMessage(u.getNombre() + ": " + mensaje, enviarDatos);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            break;
+                        }
+                    }
+                });
+                readThread.start();
+
+                // Hilo para la escritura
+                Thread writeThread = new Thread(() -> {
+                    while (true) {
+                        System.out.println("2");
+                        String mensaje = readUTF();
+                        room.broadcastMessage(mensaje, enviarDatos);
+                    }
+                });
+                writeThread.start();
+            */
+
     }
 }
