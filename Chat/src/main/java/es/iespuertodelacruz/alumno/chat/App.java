@@ -1,5 +1,6 @@
 package es.iespuertodelacruz.alumno.chat;
 
+import es.iespuertodelacruz.alumno.chat.model.Client;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

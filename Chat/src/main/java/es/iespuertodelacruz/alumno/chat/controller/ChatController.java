@@ -20,11 +20,11 @@ import javafx.scene.control.TextField;
 public class ChatController implements Initializable {
 
     @FXML
-    private TextField txtIdSala;
-    @FXML
     private TextArea txaChat;
     @FXML
-    private Button btnEntrar;
+    private TextField txtMensaje;
+    @FXML
+    private Button btnEnviar;
     
     /**
      * Initializes the controller class.
@@ -35,7 +35,8 @@ public class ChatController implements Initializable {
     } 
 
     @FXML
-    private void entrarASala(ActionEvent event) {
+    private void enviar(ActionEvent event) {
     }
+
     
 }

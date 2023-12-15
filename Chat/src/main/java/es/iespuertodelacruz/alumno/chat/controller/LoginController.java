@@ -4,6 +4,10 @@
  */
 package es.iespuertodelacruz.alumno.chat.controller;
 
+import es.iespuertodelacruz.alumno.chat.App;
+import es.iespuertodelacruz.alumno.chat.model.Client;
+import es.iespuertodelacruz.alumno.chat.model.User;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -23,18 +27,24 @@ public class LoginController implements Initializable {
     private TextField txtNick;
     @FXML
     private Button btnEnviar;
+    @FXML
+    private TextField txtIdChat;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        User user = new User(txtNick.getText(), Integer.parseInt(txtIdChat.getText()));
     }    
 
     @FXML
     private void enviar(ActionEvent event) {
-        
+        try {
+            App.setRoot("chat.fxml");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
     
 }
