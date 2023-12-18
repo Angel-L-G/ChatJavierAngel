@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 
+import es.iespuerto.Colors;
+
 public class Client {
     private final String HOST;
     private final int PORT;
@@ -24,7 +26,7 @@ public class Client {
         // Inicializamos nuestro socket indicandole el puerto y el host al que conectarse.
     }
 
-    public void connect() throws IOException{
+    public void connect(String nick, String idChat) throws IOException{
         System.out.println("Cliente conectado al Servidor en el HOST: "+HOST+" y PORT: "+PORT);
 
         recibirDatos = new DataInputStream(socket.getInputStream());
@@ -32,34 +34,36 @@ public class Client {
 
         readUTF();
         readUTF();
-        String opcion = "a";
-        while (!opcion.equals("salir")) {
-            readUTF(); // Menú
-            opcion = writeUTF(); // Opción
-            if (!opcion.equals("salir")) {
-                readUTF(); // Primer numero
-                writeUTF();
-            }
-        }
+        readUTF();
+        
+        writeUTF("entrar");
+        
+        readUTF();
+        writeUTF(nick);
+        
+        readUTF();
+        writeUTF(idChat);
+
         System.out.println("¡Adiós!");
     }
-    private void readUTF() {
+    
+    private String readUTF() {
+        String texto = "";
         try {
-            System.out.println(Colors.ANSI_GREEN+recibirDatos.readUTF()+Colors.ANSI_RESET);
+            texto = recibirDatos.readUTF();
+            System.out.println(Colors.ANSI_RED+texto+Colors.ANSI_RESET);
         } catch (IOException ex) {
-            System.err.println("Error al leer datos del servidor");
+            System.err.println("Error al leer datos del cliente");
         }
+        return texto;
     }
 
-    private String writeUTF() {
-        Scanner scanner = new Scanner(System.in);
-        String text = scanner.nextLine();
+    private void writeUTF(String text) {
         try {
             enviarDatos.writeUTF(text);
         } catch (IOException ex) {
-            System.err.println("Error al enviar datos al servidor");
+            System.err.println("Error al enviar datos al cliente");
         }
-        return text;
     }
 
     private int writeINT() {

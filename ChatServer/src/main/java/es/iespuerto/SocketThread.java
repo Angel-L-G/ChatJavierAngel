@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class SocketThread extends Thread {
 
@@ -12,7 +14,7 @@ public class SocketThread extends Thread {
     private DataOutputStream enviarDatos = null;
     Server server;
     private ChatRoom room;
-
+    private final BlockingQueue<String> cola;
     private User u;
 
     public SocketThread (DataInputStream dis, DataOutputStream dos, Server s) {
@@ -20,6 +22,7 @@ public class SocketThread extends Thread {
         enviarDatos = dos;
         u = new User();
         this.server = s;
+        this.cola = new LinkedBlockingQueue<>();
     }
 
     public User getUser() {
@@ -77,63 +80,58 @@ public class SocketThread extends Thread {
         writeUTF("Escriba 'entrar' para entrar, si quiere salir escriba 'salir'");
         opcion = readUTF();
 
-        switch (opcion) {
-            case "entrar":
-                setUser();
+        if(opcion.equals("entrar")) {
+        	setUser();
 
-                server.joinChatRoom(u.getIdChat(), enviarDatos);
-                this.room = server.getChatRoom(u.getIdChat());
+            server.joinChatRoom(u.getIdChat(), enviarDatos);
+            this.room = server.getChatRoom(u.getIdChat());
 
-                writeUTF("Escriba el Mensaje: ");
-                while (!opcion.equals("salir")) {
-                    int aux = 0;
-                    try {
-                        aux= recibirDatos.available();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+            writeUTF("Escriba el Mensaje: ");
 
-                    String mensaje;
-
-                    if(aux > 0){
-                        mensaje = readUTF();
-
-                        room.broadcastMessage(mensaje, enviarDatos);
-                    }
-
-                    mensaje = "";
-                    opcion = "";
-                }
-                break;
-            default:
-                writeUTF("Opción incorrecta.");
-            }
-
-            /*
             Thread readThread = new Thread(() -> {
-                    while (true) {
-                        try {
-                            System.out.println("1");
-                            String mensaje = recibirDatos.readUTF();
-                            room.broadcastMessage(u.getNombre() + ": " + mensaje, enviarDatos);
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                while (true) {
+                    try {
+                        String mensaje = recibirDatos.readUTF();
+                        cola.add(mensaje);
+                        if (mensaje.equals("salir")){
                             break;
                         }
+                        //room.broadcastMessage(u.getNombre() + ": " + mensaje, enviarDatos);
+                        Thread.sleep(2000);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        break;
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
                     }
-                });
-                readThread.start();
+                }
+            });
+            readThread.start();
 
-                // Hilo para la escritura
-                Thread writeThread = new Thread(() -> {
-                    while (true) {
-                        System.out.println("2");
-                        String mensaje = readUTF();
-                        room.broadcastMessage(mensaje, enviarDatos);
+            // Hilo para la escritura
+            Thread writeThread = new Thread(() -> {
+                while (true) {
+                    for (int i = 0; i < cola.size(); i++) {
+                        String mensaje = cola.poll();
+
+                        if(mensaje != null){
+                            System.out.println(mensaje);
+                            if (mensaje.equals("salir")){
+                                break;
+                            }
+                            room.broadcastMessage(u.getNombre() + ": " + mensaje, enviarDatos);
+                        }
                     }
-                });
-                writeThread.start();
-            */
 
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+            writeThread.start();
+
+        }
     }
 }

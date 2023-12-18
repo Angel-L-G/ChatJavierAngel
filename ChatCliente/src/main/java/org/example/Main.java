@@ -13,7 +13,7 @@ public class Main {
         Client client = null;
         try{
             client = new Client(host, port);
-            client.connect();
+            //client.connect();
         } catch (IOException ex){
             System.err.println("No se ha podido conectar al Servidor con HOST: "+host+" y PORT: "+port);
             System.err.println(ex.getMessage());
