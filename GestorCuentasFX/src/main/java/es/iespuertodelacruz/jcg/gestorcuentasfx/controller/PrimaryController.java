@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,7 +30,8 @@ import javafx.scene.input.MouseEvent;
  *
  * @author Javier Marcelo Cedrés González   javmarcego@gmail.com
  */
-public class PrimaryController implements Initializable {
+public class
+PrimaryController implements Initializable {
     
     @FXML
     private TextField txtNick;
@@ -49,6 +51,10 @@ public class PrimaryController implements Initializable {
     private Client client;
 
     private BlockingQueue<String> cola;
+    @FXML
+    private TextField txtPort;
+    @FXML
+    private Button btnLogout;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -60,7 +66,7 @@ public class PrimaryController implements Initializable {
     private void enviar(ActionEvent event) throws IOException {
         String javier = "172.26.5.0";
         String host = "localhost";
-        int port = 60000;
+        int port = Integer.parseInt(txtPort.getText());
         
         client = null;
         try{
@@ -100,5 +106,10 @@ public class PrimaryController implements Initializable {
     @FXML
     private void enviar2(ActionEvent event) {
         client.writeUTF(txtMensaje.getText());
+    }
+
+    @FXML
+    private void logout(ActionEvent event) {
+        System.exit(0);
     }
 }

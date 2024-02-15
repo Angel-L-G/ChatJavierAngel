@@ -6,12 +6,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="547.0" prefWidth="857.0" stylesheets="@estilos.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.iespuertodelacruz.jcg.gestorcuentasfx.controller.PrimaryController">
+<AnchorPane id="AnchorPane" prefHeight="547.0" prefWidth="857.0" stylesheets="@estilos.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.iespuertodelacruz.jcg.gestorcuentasfx.controller.PrimaryController">
    <children>
-      <Text layoutX="182.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login" wrappingWidth="35.7294921875" />
+      <Text layoutX="200.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login" wrappingWidth="35.7294921875" />
       <TextField fx:id="txtNick" layoutX="135.0" layoutY="96.0" />
       <Text layoutX="83.0" layoutY="113.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nick:" wrappingWidth="35.7294921875" />
-      <Button fx:id="btnEnviar" layoutX="169.0" layoutY="202.0" mnemonicParsing="false" onAction="#enviar" text="Enviar" />
+      <Button fx:id="btnEnviar" layoutX="186.0" layoutY="246.0" mnemonicParsing="false" onAction="#enviar" text="Enviar" />
       <TextField fx:id="txtIdChat" layoutX="136.0" layoutY="142.0" />
       <Text layoutX="83.0" layoutY="159.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Id Chat:" wrappingWidth="53.7294921875" />
       <Text layoutX="582.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chat" />
@@ -19,5 +19,8 @@
       <Text layoutX="468.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mensaje:" />
       <TextField fx:id="txtMensaje" layoutX="533.0" layoutY="67.0" />
       <Button fx:id="btnEnviar2" layoutX="566.0" layoutY="105.0" mnemonicParsing="false" onAction="#enviar2" text="Enviar" />
+      <TextField fx:id="txtPort" layoutX="136.0" layoutY="190.0" />
+      <Text layoutX="83.0" layoutY="207.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Puerto:" />
+      <Button fx:id="btnLogout" layoutX="190.0" layoutY="413.0" mnemonicParsing="false" onAction="#logout" text="LogOut" />
    </children>
 </AnchorPane>

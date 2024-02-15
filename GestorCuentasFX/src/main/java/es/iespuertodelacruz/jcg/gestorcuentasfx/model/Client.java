@@ -60,7 +60,7 @@ public class Client {
             texto = recibirDatos.readUTF();
             System.out.println(Colors.ANSI_RED + texto + Colors.ANSI_RESET);
         } catch (IOException ex) {
-            System.err.println("Error al leer datos del cliente");
+            //System.err.println("Error al leer datos del cliente");
         }
         return texto;
     }
@@ -69,7 +69,7 @@ public class Client {
         try {
             enviarDatos.writeUTF(text);
         } catch (IOException ex) {
-            System.err.println("Error al enviar datos al cliente");
+           // System.err.println("Error al enviar datos al cliente");
         }
     }
 
@@ -79,7 +79,7 @@ public class Client {
         try {
             enviarDatos.writeInt(num);
         } catch (IOException ex) {
-            System.err.println("Error al enviar datos al servidor.");
+            //System.err.println("Error al enviar datos al servidor.");
         }
         return num;
 

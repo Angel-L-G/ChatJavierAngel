@@ -1,0 +1,53 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 30 mar. 2023, 11:39:13
+
+    Author Rubén González Sabina    poybenglez@gmail.com
+    Author Javier Marcelo Cedrés González   javmarcego@gmail.com
+ 
+*/
+.root{
+    
+    -fx-background-color:#befff9;
+    -fx-border-color: grey; 
+    -fx-border-width: 3px;
+}
+
+#lstCuentas{
+    -fx-background-color:#d7fffb;
+    -fx-border-color: lightgray; 
+    
+}  
+
+Button{
+    -fx-background-color: #d7fffb;
+    -fx-border-color: lightgray;
+    -fx-border-width: 2;
+    -fx-font-family: "Arial";
+    -fx-font-style: italic;
+    -fx-background-radius: 10 10 10 10;
+    -fx-border-radius: 10 10 10 10;
+    -fx-effect: dropshadow( three-pass-box, rgba(0, 0, 0, 0.4), 5, 0.5, 2, 2 );
+    
+}
+
+ListView{
+    -fx-border-width: 3px ;
+    -fx-font-style: italic;
+    -fx-effect: dropshadow( three-pass-box, rgba(0, 0, 0, 0.4), 5, 0.5, 3, 3 );
+}
+
+.list-cell:odd {-fx-background-color: #E0E0E0;}
+.list-cell:even {-fx-background-color: #d7fffb;}
+.list-cell:selected{-fx-background-color: #9bbbff};
+
+TextArea .content{
+    -fx-background-color: #d7fffb;
+}
+
+TextArea {
+    -fx-effect: dropshadow( three-pass-box, rgba(0, 0, 0, 0.4), 5, 0.5, 3, 3 );
+}
